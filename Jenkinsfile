@@ -33,17 +33,18 @@ pipeline {
                 '''
             }
         }
-        // stage('Deploy Image'){
-        //    agent{
-        //        label 'ec2_agent'
-        //    }
-        //    steps{
-        //        sh'''
-        //            docker load < /home/user/frontend_${params.BUILD}.tar
-        //            docker load < /home/user/backend_${params.BUILD}.tar
-        //        '''
-        //     }
-        // }
+        stage('Deploy'){
+           agent{
+               label 'ec2_agent'
+           }
+           steps{
+                sh '''
+                #!/bin/bash
+                export VERSION=$(git rev-parse --short HEAD)
+                docker compose up -d 
+                '''
+            }
+        }
         // stage('Clean') {
         //     agent {
         //         label 'ec2_agent'
