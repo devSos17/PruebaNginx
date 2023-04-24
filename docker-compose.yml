@@ -1,9 +1,12 @@
 version: '3.8'
 
-services:
+x-server: &default-server
+  build: .
+  image: ${DOCKER_REGISTRY-}/prueba_nginx:latest
+  ports:
+    - 80:80
 
-  server: 
-    build: .
-    image: 374981481454.dkr.ecr.us-east-1.amazonaws.com/prueba_nginx:latest
-    ports:
-      - 80:80
+services:
+  server:
+    <<: *default-server
+    image: ${DOCKER_REGISTRY-}/prueba_nginx:${VERSION}

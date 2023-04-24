@@ -3,27 +3,36 @@ pipeline {
     parameters {
         string(name: 'MESSAGE', defaultValue: 'Hello World!', description: 'Title')
     }
+    environment {
+        DOCKER_REGISTRY = '374981481454.dkr.ecr.us-east-1.amazonaws.com'
+    }
     stages {
-        stage('Build Image') {
+        stage('Build') {
             agent {
                 label 'ec2_agent'
             }
             steps {
-                sh "docker version"
-                sh "docker compose version"
+                sh 'sed -e "s/%%/$MESSAGE/g" -i index.html'
+                sh '''
+                #!/bin/bash
+                export VERSION=$(git rev-parse --short HEAD)
+                docker compose build
+                '''
             }
         }
-        // stage('Push Image'){
-        //     agent{
-        //         label 'ec2_agent'
-        //     } 
-        //     steps{
-        //         sh'''
-        //             scp ./frontend_${params.BUILD}.tar user@proddocker01:/home/user/
-        //             scp ./backend_${params.BUILD}.tar user@proddocker01:/home/user/
-        //         '''
-        //      }   
-        // }
+        stage('Push'){
+            agent{
+                label 'ec2_agent'
+            }
+            steps{
+                sh '$(aws ecr get-login --no-include-email --region us-east-1)'
+                sh '''
+                #!/bin/bash
+                export VERSION=$(git rev-parse --short HEAD)
+                docker compose push
+                '''
+            }
+        }
         // stage('Deploy Image'){
         //    agent{
         //        label 'ec2_agent'
