@@ -2,7 +2,6 @@ version: '3.8'
 
 x-server: &default-server
   build: .
-  image: ${DOCKER_REGISTRY-}/prueba_nginx:latest
   ports:
     - 80:80
 
@@ -10,3 +9,7 @@ services:
   server:
     <<: *default-server
     image: ${DOCKER_REGISTRY-}/prueba_nginx:${VERSION}
+
+  server_latest:
+    <<: *default-server
+    image: ${DOCKER_REGISTRY-}/prueba_nginx:latest
