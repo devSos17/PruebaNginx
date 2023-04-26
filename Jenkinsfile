@@ -16,9 +16,9 @@ pipeline {
                 sh 'sed -e "s/%%/$MESSAGE/g" -i index.html'
                 sh 'docker compose build'
                 sh '''
-                    docker tag 
-                        ${DOCKER_REGISTRY}/prueba_nginx:latest 
-                        ${DOCKER_REGISTRY}/prueba_nginx:${VERSION}
+                    docker tag  \
+                        ${DOCKER_REGISTRY}/prueba_nginx:latest  \
+                        ${DOCKER_REGISTRY}/prueba_nginx:${VERSION} 
                    '''
             }
         }
