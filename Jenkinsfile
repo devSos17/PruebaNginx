@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         DOCKER_REGISTRY = '374981481454.dkr.ecr.us-east-1.amazonaws.com'
+        VERSION = sh (script: "git rev-parse --short HEAD", returnStdout: true)
     }
     stages {
         stage('Build') {
@@ -13,11 +14,12 @@ pipeline {
             }
             steps {
                 sh 'sed -e "s/%%/$MESSAGE/g" -i index.html'
+                sh 'docker compose build'
                 sh '''
-                #!/bin/bash
-                export VERSION=$(git rev-parse --short HEAD)
-                docker compose build
-                '''
+                    docker tag 
+                        ${DOCKER_REGISTRY}/prueba_nginx:latest 
+                        ${DOCKER_REGISTRY}/prueba_nginx:${VERSION}
+                   '''
             }
         }
         stage('Push'){
@@ -26,11 +28,8 @@ pipeline {
             }
             steps{
                 sh '$(aws ecr get-login --no-include-email --region us-east-1)'
-                sh '''
-                #!/bin/bash
-                export VERSION=$(git rev-parse --short HEAD)
-                docker compose push
-                '''
+                sh 'docker compose push'
+                sh 'docker push ${DOCKER_REGISTRY}/prueba_nginx:${VERSION}'
             }
         }
         stage('Deploy'){

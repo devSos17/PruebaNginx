@@ -1,15 +1,9 @@
 version: '3.8'
 
-x-server: &default-server
-  build: .
-
 services:
   server:
-    <<: *default-server
-    image: ${DOCKER_REGISTRY-}/prueba_nginx:${VERSION}
+    image: ${DOCKER_REGISTRY-}/prueba_nginx:latest
+    build: .
     ports:
       - 80:80
 
-  server_latest:
-    <<: *default-server
-    image: ${DOCKER_REGISTRY-}/prueba_nginx:latest
