@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         DOCKER_REGISTRY = '374981481454.dkr.ecr.us-east-1.amazonaws.com'
-        VERSION = sh (script: "git rev-parse --short HEAD", returnStdout: true)
+        VERSION = 'sh (script: "git rev-parse --short HEAD", returnStdout: true)'
     }
     stages {
         stage('Build') {
