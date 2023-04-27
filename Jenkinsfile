@@ -1,8 +1,5 @@
 pipeline {
     agent none
-    parameters {
-        string(name: 'MESSAGE', defaultValue: 'Hello World!', description: 'Title')
-    }
     environment {
         DOCKER_REGISTRY = '374981481454.dkr.ecr.us-east-1.amazonaws.com'
     }
@@ -15,7 +12,6 @@ pipeline {
                 label 'ec2_agent'
             }
             steps {
-                sh 'sed -e "s/%%/$MESSAGE/g" -i index.html'
                 sh 'docker compose build'
                 sh '''
                     docker tag  \
